@@ -96,22 +96,14 @@ def get_by_id_route(alumni_id):
 def get_by_enroll_route(enroll_no):
     try:
         row = get_by_enroll_number(enroll_no)
+
         if not row:
             return jsonify({
                 "status": "error",
                 "message": "Not Found"
             }), 404
 
-        personal = row.personal_basic or {}
-
-        data = {
-            "id": row.id,
-            "enrollNumber": row.enrollNumber,
-            "fullName": personal.get("fullName"),
-            "email": personal.get("email"),
-            "mobile": personal.get("mobile"),
-            "profileImage": row.profileAssetPath
-        }
+        data = {col.name: getattr(row, col.name) for col in row.__table__.columns}
 
         return jsonify({
             "status": "success",
@@ -123,5 +115,6 @@ def get_by_enroll_route(enroll_no):
             "status": "error",
             "message": str(e)
         }), 500
+
 
 

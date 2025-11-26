@@ -25,7 +25,7 @@ class Alumni(db.Model):
     # ---------- FILES ----------
     profileAssetPath = db.Column(db.String(400))  
 
-    def serialize(self):
+    def to_dist(self):
         """Return clean API-friendly JSON"""
         return {
             "id": self.id,
