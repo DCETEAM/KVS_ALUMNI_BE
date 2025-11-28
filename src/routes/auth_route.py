@@ -6,11 +6,10 @@ from src.controllers.auth_controller import (
     token_refresh_controller,
 )
 
+from src.controllers.email_controller import send_enroll_number_email
+from src.controllers.auth_controller import download_qr_controller
+
 auth_bp = Blueprint("auth", __name__, url_prefix="/api/v1/auth")
-
-
-
-
 
 # Static user list (array)
 USERS = [
@@ -36,6 +35,29 @@ USERS = [
 @auth_bp.route("/register", methods=["POST"])
 def register():
     return register_controller()
+
+@auth_bp.route("/know-enroll", methods=["POST"])
+def know_enroll():
+    try:
+        data = request.get_json()
+        email = data.get("email")
+
+        if not email:
+            return jsonify({
+                "success": False,
+                "message": "Email is required"
+            }), 400
+
+        return send_enroll_number_email(
+            email
+        )
+
+    except Exception as e:
+        return jsonify({
+            "success": False,
+            "message": str(e)
+        }), 500
+
 
 
 @auth_bp.route("/login", methods=["POST"])
@@ -109,3 +131,25 @@ def token_refresh():
 # @token_required
 # def get_user(decoded_payload):
 #     return get_user_controller()
+
+
+@auth_bp.route("/download-qr", methods=["POST"])
+def download_qr():
+    try:
+        data = request.get_json()
+        email = data.get("email")
+        enroll_no = data.get("enrollNumber")
+
+        print(email, enroll_no)
+
+        if not email and not enroll_no:
+            return jsonify({
+                "success": False,
+                "message": "Email or Enroll Number is required"
+            }), 400
+
+        
+        return download_qr_controller(email=email, enroll_no=enroll_no)
+
+    except Exception as e:
+        return jsonify({"success": False, "message": str(e)}), 500

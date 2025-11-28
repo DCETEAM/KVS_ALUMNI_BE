@@ -1,6 +1,8 @@
 from flask import Blueprint, request, jsonify
 import json
-from src.controllers.register_controller import create_alumni, get_all, get_by_enroll_number, get_by_id
+from sqlalchemy import cast, String
+
+from src.controllers.register_controller import create_alumni, get_all, get_by_enroll_number, get_by_id, update_alumni
 
 alumni_routes = Blueprint("alumni_routes", __name__, url_prefix="/api/v1/register")
 
@@ -11,7 +13,7 @@ alumni_routes = Blueprint("alumni_routes", __name__, url_prefix="/api/v1/registe
 def create_route():
     try:
         raw_json = request.form.get("jsonData")
-        file = request.files.get("file")
+        file = request.files.get("file") 
 
         if not raw_json:
             return jsonify({"status": "error", "message": "jsonData missing"}), 400
@@ -33,6 +35,7 @@ def create_route():
     except Exception as e:
         print("🔥 CREATE ERROR:", e)
         return jsonify({"status": "error", "message": "Server error"}), 500
+
 
 
 
@@ -115,6 +118,38 @@ def get_by_enroll_route(enroll_no):
             "status": "error",
             "message": str(e)
         }), 500
+
+# -------------------------------------------------------------
+# UPDATE ALUMNI (PUT/PATCH) - use enrollNumber instead of internal id
+# -------------------------------------------------------------
+@alumni_routes.route("/updateAlumni/<string:enroll_no>", methods=["PUT"])
+def update_route(enroll_no):
+    try:
+        raw_json = request.form.get("jsonData")
+        file = request.files.get("file")
+
+        print(raw_json)
+
+        if not raw_json:
+            return jsonify({"status": "error", "message": "jsonData missing"}), 400
+
+        data = json.loads(raw_json)
+
+        result = update_alumni(enroll_no, data, file)
+
+        return jsonify({
+            "status": "success",
+            "message": "Updated successfully",
+            "id": result.id,
+            "enrollNumber": result.enrollNumber
+        }), 200
+
+    except ValueError as ve:
+        return jsonify({"status": "error", "message": str(ve)}), 400
+
+    except Exception as e:
+        print("🔥 UPDATE ERROR:", e)
+        return jsonify({"status": "error", "message": "Server error"}), 500
 
 
 

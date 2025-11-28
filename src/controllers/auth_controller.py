@@ -5,6 +5,12 @@ from flask import jsonify, request
 from src.models.register_modal import Alumni
 from src.models.user_model import User
 from src.utils.jwt import decode_jwt_token, generate_jwt_token
+from flask import send_file
+from sqlalchemy import func
+
+from src.controllers.register_controller import get_by_email
+
+import os
 
 
 def register_controller():
@@ -68,7 +74,8 @@ def login_controller(enroll_no, email):
 
         return jsonify({
             "message": "Login successful",
-            "status": 1
+            "status": 1,
+            "success": True
         }), 200
 
     except Exception as e:
@@ -117,3 +124,35 @@ def token_refresh_controller():
         )
     except Exception as e:
         return (jsonify({"success": 0, "error": str(e)}), 500)
+    
+def download_qr_controller(email=None, enroll_no=None):
+    user = None
+    print("🔥 email:", email)
+    print("🔥 enroll_no:", enroll_no)
+    # Lookup by email
+    if email:
+        email = email.strip().lower()
+        user = get_by_email(email)
+    print("🔥 user after email lookup:", user)
+
+    # Lookup by enroll number
+    if not user and enroll_no:
+        print("🔥 enroll_no before strip:", enroll_no)
+        enroll_no = str(enroll_no).strip()
+        user = Alumni.query.filter_by(enrollNumber=enroll_no).first()
+    print(user)
+    if not user:
+        return jsonify({
+            "success": False,
+            "message": "No matching user found"
+        }), 404
+
+    # QR filename = enrollNumber.png
+    filename = f"{user.enrollNumber}.png"
+
+    return jsonify({
+        "success": True,
+        "filename": filename,      # 🔥 return only filename
+        "message": "QR filename fetched successfully"
+    }), 200
+

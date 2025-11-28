@@ -52,3 +52,27 @@ def get_mark_status(enroll_no):
         }, 200
     except Exception as e:
         return {"status": "error", "message": str(e)}, 500
+    
+def get_mark_status(enroll_no):
+    try:
+        # Fetch ALL marks for the user
+        records = MarkStatus.query.filter_by(enrollNumber=enroll_no).all()
+
+        status_map = {
+            "Entry": False,
+            "Food": False,
+            "Kit Bag": False
+        }
+
+        # Map db records → UI
+        for r in records:
+            if r.markType in status_map:
+                status_map[r.markType] = True
+
+        return {
+            "status": "success",
+            "data": status_map
+        }, 200
+
+    except Exception as e:
+        return {"status": "error", "message": str(e)}, 500

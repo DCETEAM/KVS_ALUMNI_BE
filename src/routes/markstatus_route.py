@@ -29,3 +29,12 @@ def get_mark(enroll_no):
     except Exception as e:
         return jsonify({"status": "error", "message": str(e)}), 500
 
+@markstatus_routes.route("/status/<enroll_no>", methods=["GET"])
+def get_status(enroll_no):
+    try:
+        response, code = get_mark_status(enroll_no)
+        return jsonify(response), code
+
+    except Exception as e:
+        return jsonify({"status": "error", "message": str(e)}), 500
+
