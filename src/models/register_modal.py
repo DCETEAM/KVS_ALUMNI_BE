@@ -1,4 +1,5 @@
 from src import db
+from datetime import datetime
 
 class Alumni(db.Model):
     __tablename__ = "alumni"
@@ -24,7 +25,19 @@ class Alumni(db.Model):
 
     # ---------- FILES ----------
     profileAssetPath = db.Column(db.String(400))  
+    # ---------- TIMESTAMPS ----------
+    created_at = db.Column(
+        db.DateTime,
+        default=datetime.utcnow,
+        nullable=False
+    )
 
+    updated_at = db.Column(
+        db.DateTime,
+        default=datetime.utcnow,
+        onupdate=datetime.utcnow,
+        nullable=False
+    )
     def serialize(self):
         """Return clean API-friendly JSON"""
         return {

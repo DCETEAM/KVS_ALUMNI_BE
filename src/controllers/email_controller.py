@@ -48,52 +48,69 @@ def send_enrollment_email(
 
         # Email HTML template
         html = f"""
-<html>
-<body style="font-family:Arial; background:#f5f7fa; padding:20px;">
-    <div style="max-width:600px; margin:auto; background:white; padding:25px; border-radius:10px; box-shadow:0 0 10px #ddd;">
+        <html>
+        <body style="font-family:Arial; background:#f5f7fa; padding:20px;">
+            <div style="max-width:600px; margin:auto; background:white; padding:25px; border-radius:10px; box-shadow:0 010px #ddd;">
 
-        <h2 style="text-align:center; color:#1e3a8a;">KVS Soolakkarai Alumni Meet 2025</h2>
+                <h2 style="text-align:center; color:#1e3a8a;">KVS Soolakkarai Alumni Meet 2025</h2>
 
-        <p>Dear <strong>{full_name}</strong>,</p>
+                <p>Dear <strong>{full_name}</strong>,</p>
 
-        <p>
-            Thank you for registering for the 
-            <strong>4th KVS Soolakkarai Alumni Meet</strong>.<br>
-            Your registration has been successfully received.
-        </p>
+                <p>
+                    Thank you for registering for the 
+                    <strong>4th KVS Soolakkarai Alumni Meet</strong>.<br>
+                    Your registration has been successfully received.
+                </p>
 
-        <div style="border-left:4px solid #1e3a8a; 
-                    background:#eef3ff; 
-                    padding:10px 15px; 
-                    margin:20px 0;">
-            <h3 style="margin-top:0;">Event Details</h3>
+                <!-- ⚠️ Kit Bag Notice -->
+                <div style="
+                    border-left:4px solid #f59e0b;
+                    background:#fff7ed;
+                    padding:10px 15px;
+                    margin:18px 0;
+                    border-radius:6px;
+                ">
+                    <p style="margin:0; color:#92400e;">
+                        👉 <strong>Important Note:</strong><br>
+                        Registrations completed <strong>after 17th December</strong> will
+                        <strong>not be eligible for the KIT Bag</strong>.
+                        However, all registered alumni are warmly invited to attend the Alumni Meet
+                        and enjoy the event along with our special lunch.
+                    </p>
+                </div>
 
-            <p>📅 <strong>Date:</strong> 28 Dec 2025</p>
-            <p>⏰ <strong>Time:</strong> 07:00 AM – 02:00 PM</p>
-            <p>📍 <strong>Venue:</strong> Kshatriya Vidyasala English Medium School, Virudhunagar</p>
-        </div>
+                <div style="border-left:4px solid #1e3a8a; 
+                            background:#eef3ff; 
+                            padding:10px 15px; 
+                            margin:20px 0;">
+                    <h3 style="margin-top:0;">Event Details</h3>
 
-        <p>
-            We look forward to welcoming you and reconnecting with fellow alumni across all batches. <br>
-            Further event updates and instructions will be shared with you soon.
-        </p>
+                    <p>📅 <strong>Date:</strong> 28 Dec 2025</p>
+                    <p>⏰ <strong>Time:</strong> 07:00 AM – 02:00 PM</p>
+                    <p>📍 <strong>Venue:</strong> Kshatriya Vidyasala English Medium School, Virudhunagar</p>
+                </div>
 
-        <p>
-            If you have any questions, feel free to reach out: 
-            <a href="mailto:kvssoolakkaraiobavnr@gmail.com">kvssoolakkaraiobavnr@gmail.com</a>
-        </p>
+                <p>
+                    We look forward to welcoming you and reconnecting with fellow alumni across all batches. <br>
+                    Further event updates and instructions will be shared with you soon.
+                </p>
 
-        <p>
-            Warm regards,<br>
-            <strong>KVS Soolakkarai Alumni Association</strong>
-        </p>
+                <p>
+                    If you have any questions, feel free to reach out: 
+                    <a href="mailto:kvssoolakkaraiobavnr@gmail.com">kvssoolakkaraiobavnr@gmail.com</a>
+                </p>
 
-        <br>
-        <img src="cid:logo_image" style="width:120px; opacity:0.9;">
-    </div>
-</body>
-</html>
-"""
+                <p>
+                    Warm regards,<br>
+                    <strong>KVS Soolakkarai Alumni Association</strong>
+                </p>
+
+                <br>
+                <img src="cid:logo_image" style="width:120px; opacity:0.9;">
+            </div>
+        </body>
+        </html>
+        """
 
         msg_alt.attach(MIMEText(html, "html"))
 

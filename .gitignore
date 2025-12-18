@@ -39,3 +39,4 @@ instance/config.py
 .DS_Store
 
 ./src/assets/
+src/assets/qrcodes/700620.png
