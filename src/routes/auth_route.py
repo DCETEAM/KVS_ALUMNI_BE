@@ -8,6 +8,7 @@ from src.controllers.auth_controller import (
 
 from src.controllers.email_controller import send_enroll_number_email
 from src.controllers.auth_controller import download_qr_controller
+from src.controllers.qr_controller import send_alumni_qr_controller
 
 auth_bp = Blueprint("auth", __name__, url_prefix="/api/v1/auth")
 
@@ -153,3 +154,8 @@ def download_qr():
 
     except Exception as e:
         return jsonify({"success": False, "message": str(e)}), 500
+    
+@auth_bp.route("/send-alumni-qr", methods=["POST"])
+def send_alumni_qr():
+    return send_alumni_qr_controller()
+
