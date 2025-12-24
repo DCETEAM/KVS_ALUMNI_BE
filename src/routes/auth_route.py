@@ -65,22 +65,18 @@ def know_enroll():
 def login():
     try:
         data = request.get_json()
-
-        enroll_no = data.get("enrollNumber")
         email = data.get("email")
 
-        if not enroll_no or not email:
+        if not email:
             return jsonify({
                 "status": "error",
                 "message": "Missing enrollNumber or email"
             }), 400
 
-        # Controller already returns (jsonify({...}), status)
-        return login_controller(enroll_no, email)
+        return login_controller(email)
 
     except Exception as e:
         return jsonify({"status": "error", "message": str(e)}), 500
-
 
 
 @auth_bp.route("/staticlogin", methods=["POST"])

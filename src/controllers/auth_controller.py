@@ -42,44 +42,42 @@ def register_controller():
         return (jsonify({"success": 0, "error": str(e)}), 500)
 
 
-def login_controller(enroll_no, email):
+def login_controller(email):
     try:
-
-        if not enroll_no or not email:
+        if not email:
             return jsonify({
-                "message": "enrollNumber and email are required",
+                "message": "Email is required",
                 "status": 0
             }), 400
 
-        # Fetch alumni user
-        user = Alumni.query.filter_by(enrollNumber=enroll_no).first()
-        print(user)
+        email = email.strip().lower()
+
+        user = Alumni.query.filter(
+            func.lower(
+                func.json_unquote(
+                    func.json_extract(Alumni.personal_basic, '$.email')
+                )
+            ) == email
+        ).first()
+
         if not user:
-            return jsonify({"message": "Invalid credentials", "status": 0}), 401
-
-        basic = user.personal_basic or {}
-        saved_email = (basic.get("email") or "").strip().lower()
-
-        if saved_email != email.strip().lower():
-            return jsonify({"message": "Invalid credentials", "status": 0}), 401
-
-        # --- JWT TOKENS ---
-        access_token = generate_jwt_token(user.id)
-        refresh_token = generate_jwt_token(user.id, is_refresh=True)
-
-        # OPTIONAL: add refresh token column in Alumni model if needed
-        # user.refresh_token = refresh_token
-        # user.refresh_token_created_at = datetime.datetime.utcnow()
-        # db.session.commit()
+            return jsonify({
+                "message": "Email not registered",
+                "status": 0
+            }), 401
 
         return jsonify({
             "message": "Login successful",
             "status": 1,
-            "success": True
+            "success": True,
         }), 200
 
     except Exception as e:
-        return jsonify({"success": 0, "error": str(e)}), 500
+        return jsonify({
+            "success": 0,
+            "error": str(e)
+        }), 500
+
 
 
 def token_refresh_controller():
